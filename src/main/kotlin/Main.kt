@@ -1,5 +1,13 @@
-fun main(args: Array<String>) {
-    println("Hello World!")
+import menu.CreditsMenu
+import menu.MainMenu
+import menu.OptionsMenu
 
-    println("Program arguments: ${args.joinToString()}")
+fun main() {
+
+    MainLoop(
+        mainMenu = MainMenu(),
+        optionsMenu = OptionsMenu(),
+        creditsMenu = CreditsMenu(),
+        game = Game()
+    ).loop()
 }
