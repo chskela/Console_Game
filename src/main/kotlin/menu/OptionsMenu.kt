@@ -41,8 +41,8 @@ class OptionsMenu {
         println(
             """
         Current options:
-          rows: ${Options.rows}
-          columns: ${Options.columns}
+          sizeX: ${Options.sizeX}
+          sizeY: ${Options.sizeY}
           amount of enemies: ${Options.amountOfEnemies}
           transistors needed: ${Options.transistorsNeeded}
           moves: ${Options.moves}
@@ -51,10 +51,10 @@ class OptionsMenu {
     }
 
     private fun changeOptions() {
-        println("Enter a new value for rows: ")
-        Options.rows = readLine()?.toInt() ?: Options.rows
-        println("Enter a new value for columns: ")
-        Options.columns = readLine()?.toInt() ?: Options.columns
+        println("Enter a new value for sizeX: ")
+        Options.sizeX = readLine()?.toInt() ?: Options.sizeX
+        println("Enter a new value for sizeY: ")
+        Options.sizeY = readLine()?.toInt() ?: Options.sizeY
         println("Enter a new value for amount of enemies: ")
         Options.amountOfEnemies = readLine()?.toInt() ?: Options.amountOfEnemies
         println("Enter a new value for transistors needed: ")
