@@ -1,20 +1,22 @@
 package menu
 
 import Game
+import Options
+
 
 class MainMenu(
     private val optionsMenu: OptionsMenu,
     private val creditsMenu: CreditsMenu,
-    private val game: Game
+
 ) {
     private var isExit: Boolean = false
-
+    private lateinit var game: Game
     fun loop() {
         do {
             showMenu()
 
             when (readLine()?.toInt() ?: 0) {
-                1 -> game.startNewGame()
+                1 -> startNewGame()
 
                 2 -> optionsMenu.loop()
 
@@ -29,6 +31,11 @@ class MainMenu(
                 }
             }
         } while (!isExit)
+    }
+
+    private fun startNewGame() {
+        game = Game(Options)
+        game.startGame()
     }
 
     private fun showMenu() {
