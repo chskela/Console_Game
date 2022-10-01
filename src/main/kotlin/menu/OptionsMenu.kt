@@ -44,6 +44,7 @@ class OptionsMenu {
           sizeX: ${Options.sizeX}
           sizeY: ${Options.sizeY}
           amount of enemies: ${Options.amountOfEnemies}
+          amount of flowers: ${Options.amountOfFlowers}
           transistors needed: ${Options.transistorsNeeded}
           moves: ${Options.moves}
     """.trimIndent()
@@ -57,6 +58,8 @@ class OptionsMenu {
         Options.sizeY = readLine()?.toInt() ?: Options.sizeY
         println("Enter a new value for amount of enemies: ")
         Options.amountOfEnemies = readLine()?.toInt() ?: Options.amountOfEnemies
+        println("Enter a new value for amount of flowers: ")
+        Options.amountOfEnemies = readLine()?.toInt() ?: Options.amountOfFlowers
         println("Enter a new value for transistors needed: ")
         Options.transistorsNeeded = readLine()?.toInt() ?: Options.transistorsNeeded
         println("Enter a new value for moves: ")
