@@ -6,6 +6,7 @@ class Game(
 ) {
 
     private var transistorsGathered: Int = 0
+    private var turnLeft = options.moves
     private var isGameNotFinished: Boolean = true
 
     private var player: FieldObject.Player = FieldObject.Player(0 to 0)
@@ -29,7 +30,7 @@ class Game(
     }
 
     private fun showScore() {
-        println("Transistors gathered: $transistorsGathered")
+        println("Turn left: $turnLeft, transistors gathered: $transistorsGathered/${options.transistorsNeeded}")
     }
 
     private fun flowersPlacement() {
@@ -80,8 +81,8 @@ class Game(
         val command = readLine() ?: ""
         val (x, y) = player.coordinate
         val newCoordinate: Pair<Int, Int> = getNewCoordinate(command, x, y)
-
-        val targetField = playingField.field[newCoordinate.second][newCoordinate.first]
+        val (newX, newY) = newCoordinate
+        val targetField: FieldObject = playingField.field[newY][newX]
 
         if (targetField !is FieldObject.Enemy) {
 
@@ -91,7 +92,8 @@ class Game(
 
             playingField.field[y][x] = FieldObject.Empty
             player = player.makeMove(newCoordinate)
-            playerPlacement()
+            playingField.field[newY][newX] = player
+            turnLeft--
         }
     }
 
