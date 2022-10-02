@@ -7,7 +7,6 @@ class Game(
 
     private var transistorsGathered: Int = 0
     private var isGameNotFinished: Boolean = true
-    private var flowersList = listOf<FieldObject.Flower>()
 
     private var player: FieldObject.Player = FieldObject.Player(0 to 0)
 
@@ -20,6 +19,7 @@ class Game(
 
         while (isGameNotFinished) {
             showScore()
+            generateFlowers()
             playingField.showField()
             playerTurn()
             computerTurn()
@@ -37,7 +37,16 @@ class Game(
     }
 
     private fun generateFlowers() {
-        var repeat = options.amountOfFlowers - flowersList.size
+        val flowersOnField: Int by lazy {
+            playingField.field.fold(0) { rowAcc, fieldObjects ->
+                rowAcc + fieldObjects.fold(0) { acc, fieldObject ->
+                    if (fieldObject is FieldObject.Flower) {
+                        acc + 1
+                    } else acc
+                }
+            }
+        }
+        var repeat = options.amountOfFlowers - flowersOnField
 
         while (repeat > 0) {
             val x = Random.nextInt(0, options.sizeX)
@@ -46,7 +55,6 @@ class Game(
                 FieldObject.Empty -> {
                     val flower = FieldObject.Flower(Random.nextInt(0, 9) + 1)
                     playingField.field[y][x] = flower
-                    flowersList = flowersList + flower
                     repeat -= 1
                 }
 
