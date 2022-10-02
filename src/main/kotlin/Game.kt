@@ -5,7 +5,7 @@ class Game(
     private val playingField: PlayingField = PlayingField(options.sizeX to options.sizeY)
 ) {
 
-    val transistorsGathered: Int = 0
+    private var transistorsGathered: Int = 0
     private var isGameNotFinished: Boolean = true
     private var flowersList = listOf<FieldObject.Flower>()
 
@@ -19,11 +19,17 @@ class Game(
         flowersPlacement()
 
         while (isGameNotFinished) {
+            showScore()
             playingField.showField()
             playerTurn()
             computerTurn()
+
             checkIfGameNotFinished()
         }
+    }
+
+    private fun showScore() {
+        println("Transistors gathered: $transistorsGathered")
     }
 
     private fun flowersPlacement() {
@@ -65,41 +71,44 @@ class Game(
     private fun playerTurn() {
         val command = readLine() ?: ""
         val (x, y) = player.coordinate
-        val newCoordinate: Pair<Int, Int> = when (command) {
-            LEFT -> {
-                player.coordinate.copy(first = x - 1)
+        val newCoordinate: Pair<Int, Int> = getNewCoordinate(command, x, y)
+
+        val targetField = playingField.field[newCoordinate.second][newCoordinate.first]
+
+        if (targetField !is FieldObject.Enemy) {
+
+            if (targetField is FieldObject.Flower) {
+                transistorsGathered += targetField.amount
             }
 
-            RIGHT -> {
-                player.coordinate.copy(first = x + 1)
-
-            }
-
-            UP -> {
-                player.coordinate.copy(second = y - 1)
-            }
-
-            DOWN -> {
-                player.coordinate.copy(second = y + 1)
-            }
-
-            else -> {
-                player.coordinate
-            }
-        }
-        val (newX, newY) = newCoordinate
-
-        if (newX in (0 until playingField.coordinate.first)
-            && newY in (0 until playingField.coordinate.second)
-            && playingField.field[newX][newY] !is FieldObject.Enemy
-
-        ) {
             playingField.field[y][x] = FieldObject.Empty
             player = player.makeMove(newCoordinate)
             playerPlacement()
         }
     }
 
+    private fun getNewCoordinate(command: String, x: Int, y: Int) = when (command) {
+        LEFT -> {
+            player.coordinate.copy(first = (x - 1).coerceAtLeast(0))
+        }
+
+        RIGHT -> {
+            player.coordinate.copy(first = (x + 1).coerceAtMost(playingField.coordinate.first - 1))
+
+        }
+
+        UP -> {
+            player.coordinate.copy(second = (y - 1).coerceAtLeast(0))
+        }
+
+        DOWN -> {
+            player.coordinate.copy(second = (y + 1).coerceAtMost(playingField.coordinate.second - 1))
+        }
+
+        else -> {
+            player.coordinate
+        }
+    }
 }
 
 
