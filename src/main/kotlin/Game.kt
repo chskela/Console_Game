@@ -9,7 +9,7 @@ class Game(
     private var turnLeft = options.moves
     private var isGameNotFinished: Boolean = true
 
-    private var player: FieldObject.Player = FieldObject.Player(0 to 0)
+    private lateinit var player: FieldObject.Player
 
 
     fun startGame() {
@@ -54,8 +54,7 @@ class Game(
             val y = Random.nextInt(0, options.sizeY)
             when (playingField.field[y][x]) {
                 FieldObject.Empty -> {
-                    val flower = FieldObject.Flower(Random.nextInt(0, 9) + 1)
-                    playingField.field[y][x] = flower
+                    playingField.field[y][x] = FieldObject.Flower(Random.nextInt(0, 9) + 1)
                     repeat -= 1
                 }
 
@@ -68,7 +67,10 @@ class Game(
     }
 
     private fun playerPlacement() {
-        playingField.field[player.coordinate.second][player.coordinate.first] = player
+        val x = Random.nextInt(0, options.sizeX)
+        val y = Random.nextInt(0, options.sizeY)
+        player = FieldObject.Player(x to y)
+        playingField.field[y][x] = player
     }
 
     private fun checkIfGameNotFinished() {
@@ -78,7 +80,9 @@ class Game(
     }
 
     private fun playerTurn() {
-        val command = readLine() ?: ""
+        println("Please enter your command and press Enter:")
+
+        val command: String = readLine() ?: ""
         val (x, y) = player.coordinate
         val newCoordinate: Pair<Int, Int> = getNewCoordinate(command, x, y)
         val (newX, newY) = newCoordinate
