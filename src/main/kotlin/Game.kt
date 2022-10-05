@@ -58,12 +58,29 @@ class Game(
                     repeat -= 1
                 }
 
-                else -> {}
+                else -> {
+                    continue
+                }
             }
         }
     }
 
     private fun enemiesPlacement() {
+        var repeat = options.amountOfEnemies
+        while (repeat > 0) {
+            val x = Random.nextInt(0, options.sizeX)
+            val y = Random.nextInt(0, options.sizeY)
+            when (playingField.field[y][x]) {
+                FieldObject.Empty -> {
+                    playingField.field[y][x] = FieldObject.Enemy(x to y)
+                    repeat -= 1
+                }
+
+                else -> {
+                    continue
+                }
+            }
+        }
     }
 
     private fun playerPlacement() {
