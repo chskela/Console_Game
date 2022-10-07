@@ -4,7 +4,6 @@ class Game(
     private val options: Options,
     private val playingField: PlayingField = PlayingField(options.sizeX to options.sizeY)
 ) {
-
     private var transistorsGathered: Int = 0
     private var turnLeft = options.moves
     private var isGameNotFinished: Boolean = true
@@ -94,6 +93,29 @@ class Game(
     }
 
     private fun computerTurn() {
+        val listEnemy: List<FieldObject.Enemy> by lazy {
+            playingField.field.flatten().filterIsInstance<FieldObject.Enemy>()
+        }
+
+        listEnemy.forEach { fieldObject ->
+            val (x, y) = fieldObject.coordinate
+            var isTurn = false
+
+            do {
+                val newX = (x + Random.nextInt(-1, 2)).coerceIn(0, options.sizeX - 1)
+                val newY = (y + Random.nextInt(-1, 2)).coerceIn(0, options.sizeY - 1)
+
+                if (
+                    playingField.field[newY][newX] !is FieldObject.Enemy
+                    && playingField.field[newY][newX] !is FieldObject.Player
+                ) {
+                    playingField.field[newY][newX] = FieldObject.Enemy(newX to newY)
+                    playingField.field[y][x] = FieldObject.Empty
+                    isTurn = true
+                }
+
+            } while (!isTurn)
+        }
     }
 
     private fun playerTurn() {
@@ -124,7 +146,7 @@ class Game(
         }
 
         RIGHT -> {
-            player.coordinate.copy(first = (x + 1).coerceAtMost(playingField.coordinate.first - 1))
+            player.coordinate.copy(first = (x + 1).coerceAtMost(options.sizeX - 1))
 
         }
 
@@ -133,7 +155,7 @@ class Game(
         }
 
         DOWN -> {
-            player.coordinate.copy(second = (y + 1).coerceAtMost(playingField.coordinate.second - 1))
+            player.coordinate.copy(second = (y + 1).coerceAtMost(options.sizeY - 1))
         }
 
         else -> {
