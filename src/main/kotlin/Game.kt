@@ -6,10 +6,8 @@ class Game(
 ) {
     private var transistorsGathered: Int = 0
     private var turnLeft = options.moves
-    private var isGameNotFinished: Boolean = true
 
     private lateinit var player: FieldObject.Player
-
 
     fun startGame() {
 
@@ -17,14 +15,13 @@ class Game(
         enemiesPlacement()
         flowersPlacement()
 
-        while (isGameNotFinished) {
+        while (checkIfGameNotFinished()) {
             showScore()
             generateFlowers()
             playingField.showField()
             playerTurn()
             computerTurn()
 
-            checkIfGameNotFinished()
         }
     }
 
@@ -51,6 +48,7 @@ class Game(
         while (repeat > 0) {
             val x = Random.nextInt(0, options.sizeX)
             val y = Random.nextInt(0, options.sizeY)
+
             when (playingField.field[y][x]) {
                 FieldObject.Empty -> {
                     playingField.field[y][x] = FieldObject.Flower(Random.nextInt(0, 9) + 1)
@@ -66,9 +64,11 @@ class Game(
 
     private fun enemiesPlacement() {
         var repeat = options.amountOfEnemies
+
         while (repeat > 0) {
             val x = Random.nextInt(0, options.sizeX)
             val y = Random.nextInt(0, options.sizeY)
+
             when (playingField.field[y][x]) {
                 FieldObject.Empty -> {
                     playingField.field[y][x] = FieldObject.Enemy(x to y)
@@ -89,16 +89,21 @@ class Game(
         playingField.field[y][x] = player
     }
 
-    private fun checkIfGameNotFinished() {
-    }
+    private fun checkIfGameNotFinished() = if (turnLeft == 0 && transistorsGathered < Options.transistorsNeeded) {
+            println("Player Game Over!!!")
+            false
+        } else if (transistorsGathered >= Options.transistorsNeeded) {
+            println("Player Win!!!")
+            false
+        } else true
 
     private fun computerTurn() {
         val listEnemy: List<FieldObject.Enemy> by lazy {
             playingField.field.flatten().filterIsInstance<FieldObject.Enemy>()
         }
 
-        listEnemy.forEach { fieldObject ->
-            val (x, y) = fieldObject.coordinate
+        listEnemy.forEach { enemy ->
+            val (x, y) = enemy.coordinate
             var isTurn = false
 
             do {
@@ -120,8 +125,8 @@ class Game(
 
     private fun playerTurn() {
         println("Please enter your command and press Enter:")
-
         val command: String = readLine() ?: ""
+
         val (x, y) = player.coordinate
         val newCoordinate: Pair<Int, Int> = getNewCoordinate(command, x, y)
         val (newX, newY) = newCoordinate
