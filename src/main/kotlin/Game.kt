@@ -1,9 +1,8 @@
 import kotlin.random.Random
 
-class Game(
-    private val options: Options,
+class Game(private val options: Options) {
+
     private val playingField: PlayingField = PlayingField(options.sizeX to options.sizeY)
-) {
     private var transistorsGathered: Int = 0
     private var turnLeft = options.moves
 
@@ -18,11 +17,15 @@ class Game(
         while (checkIfGameNotFinished()) {
             showScore()
             generateFlowers()
-            playingField.showField()
+            showField()
             playerTurn()
             computerTurn()
 
         }
+    }
+
+    private fun showField() {
+        playingField.showField()
     }
 
     private fun showScore() {
@@ -46,8 +49,7 @@ class Game(
         var repeat = options.amountOfFlowers - flowersOnField
 
         while (repeat > 0) {
-            val x = Random.nextInt(0, options.sizeX)
-            val y = Random.nextInt(0, options.sizeY)
+            val (x, y) = getRandomCoordinate()
 
             when (playingField.field[y][x]) {
                 FieldObject.Empty -> {
@@ -66,8 +68,7 @@ class Game(
         var repeat = options.amountOfEnemies
 
         while (repeat > 0) {
-            val x = Random.nextInt(0, options.sizeX)
-            val y = Random.nextInt(0, options.sizeY)
+            val (x, y) = getRandomCoordinate()
 
             when (playingField.field[y][x]) {
                 FieldObject.Empty -> {
@@ -83,19 +84,18 @@ class Game(
     }
 
     private fun playerPlacement() {
-        val x = Random.nextInt(0, options.sizeX)
-        val y = Random.nextInt(0, options.sizeY)
+        val (x, y) = getRandomCoordinate()
         player = FieldObject.Player(x to y)
         playingField.field[y][x] = player
     }
 
     private fun checkIfGameNotFinished() = if (turnLeft == 0 && transistorsGathered < Options.transistorsNeeded) {
-            println("Player Game Over!!!")
-            false
-        } else if (transistorsGathered >= Options.transistorsNeeded) {
-            println("Player Win!!!")
-            false
-        } else true
+        println("Player Game Over!!!")
+        false
+    } else if (transistorsGathered >= Options.transistorsNeeded) {
+        println("Player Win!!!")
+        false
+    } else true
 
     private fun computerTurn() {
         val listEnemy: List<FieldObject.Enemy> by lazy {
@@ -166,5 +166,11 @@ class Game(
         else -> {
             player.coordinate
         }
+    }
+
+    private fun getRandomCoordinate(): Pair<Int, Int> {
+        val x = Random.nextInt(0, options.sizeX)
+        val y = Random.nextInt(0, options.sizeY)
+        return Pair(x, y)
     }
 }
