@@ -15,7 +15,7 @@ class MainMenu(
         do {
             showMenu()
 
-            when (readLine()?.toInt() ?: 0) {
+            when (readLine()?.toIntOrNull() ?: 0) {
                 1 -> startNewGame()
 
                 2 -> optionsMenu.loop()
