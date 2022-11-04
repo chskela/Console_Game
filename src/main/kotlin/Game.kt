@@ -1,10 +1,16 @@
+import Options.amountOfEnemies
+import Options.amountOfFlowers
+import Options.moves
+import Options.sizeX
+import Options.sizeY
+import Options.transistorsNeeded
 import kotlin.random.Random
 
-class Game(private val options: Options) {
+class Game {
 
-    private val playingField: PlayingField = PlayingField(options.sizeX to options.sizeY)
+    private val playingField: PlayingField = PlayingField(sizeX to sizeY)
     private var transistorsGathered: Int = 0
-    private var turnLeft = options.moves
+    private var turnLeft = moves
 
     private lateinit var player: FieldObject.Player
 
@@ -29,7 +35,7 @@ class Game(private val options: Options) {
     }
 
     private fun showScore() {
-        println("Turn left: $turnLeft, transistors gathered: $transistorsGathered/${options.transistorsNeeded}")
+        println("Turn left: $turnLeft, transistors gathered: $transistorsGathered/${transistorsNeeded}")
     }
 
     private fun flowersPlacement() {
@@ -46,7 +52,7 @@ class Game(private val options: Options) {
                 }
             }
         }
-        var repeat = options.amountOfFlowers - flowersOnField
+        var repeat = amountOfFlowers - flowersOnField
 
         while (repeat > 0) {
             val (x, y) = getRandomCoordinate()
@@ -65,7 +71,7 @@ class Game(private val options: Options) {
     }
 
     private fun enemiesPlacement() {
-        var repeat = options.amountOfEnemies
+        var repeat = amountOfEnemies
 
         while (repeat > 0) {
             val (x, y) = getRandomCoordinate()
@@ -89,10 +95,10 @@ class Game(private val options: Options) {
         playingField.field[y][x] = player
     }
 
-    private fun checkIfGameNotFinished() = if (turnLeft == 0 && transistorsGathered < Options.transistorsNeeded) {
+    private fun checkIfGameNotFinished() = if (turnLeft == 0 && transistorsGathered < transistorsNeeded) {
         println("Player Game Over!!!")
         false
-    } else if (transistorsGathered >= Options.transistorsNeeded) {
+    } else if (transistorsGathered >= transistorsNeeded) {
         println("Player Win!!!")
         false
     } else true
@@ -107,8 +113,8 @@ class Game(private val options: Options) {
             var isTurn = false
 
             do {
-                val newX = (x + Random.nextInt(-1, 2)).coerceIn(0, options.sizeX - 1)
-                val newY = (y + Random.nextInt(-1, 2)).coerceIn(0, options.sizeY - 1)
+                val newX = (x + Random.nextInt(-1, 2)).coerceIn(0, sizeX - 1)
+                val newY = (y + Random.nextInt(-1, 2)).coerceIn(0, sizeY - 1)
 
                 if (
                     playingField.field[newY][newX] !is FieldObject.Enemy
@@ -151,7 +157,7 @@ class Game(private val options: Options) {
         }
 
         RIGHT -> {
-            player.coordinate.copy(first = (x + 1).coerceAtMost(options.sizeX - 1))
+            player.coordinate.copy(first = (x + 1).coerceAtMost(sizeX - 1))
 
         }
 
@@ -160,7 +166,7 @@ class Game(private val options: Options) {
         }
 
         DOWN -> {
-            player.coordinate.copy(second = (y + 1).coerceAtMost(options.sizeY - 1))
+            player.coordinate.copy(second = (y + 1).coerceAtMost(sizeY - 1))
         }
 
         else -> {
@@ -169,8 +175,8 @@ class Game(private val options: Options) {
     }
 
     private fun getRandomCoordinate(): Pair<Int, Int> {
-        val x = Random.nextInt(0, options.sizeX)
-        val y = Random.nextInt(0, options.sizeY)
+        val x = Random.nextInt(0, sizeX)
+        val y = Random.nextInt(0, sizeY)
         return Pair(x, y)
     }
 }

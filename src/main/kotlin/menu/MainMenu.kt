@@ -1,16 +1,15 @@
 package menu
 
 import Game
-import Options
-
 
 class MainMenu(
     private val optionsMenu: OptionsMenu,
     private val creditsMenu: CreditsMenu,
+    ) {
 
-) {
     private var isExit: Boolean = false
     private lateinit var game: Game
+
     fun loop() {
         do {
             showMenu()
@@ -34,7 +33,7 @@ class MainMenu(
     }
 
     private fun startNewGame() {
-        game = Game(Options)
+        game = Game()
         game.startGame()
     }
 
